@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+python-dotenv
+resend
+hubspot-api-client
+playwright
+langfuse
+requests
