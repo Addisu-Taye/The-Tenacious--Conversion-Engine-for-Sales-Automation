@@ -1,0 +1,65 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+bin/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Environment variables / Credentials (IMPORTANT)
+.env
+.env.local
+.env.*
+config.py
+# If config.py contains secrets, keep it ignored. 
+# Better: use agent/config.py for logic and .env for secrets.
+
+# Log files and traces
+*.log
+agent/traces/*.log
+eval/trace_log.jsonl
+eval/score_log.json
+held_out_traces.jsonl
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+
+# Data and large files (Keep your graph/results but ignore binaries if preferred)
+*.pdf
+evidence_graph.json
+ablation_results.json

@@ -1,0 +1,25 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: cal
+      POSTGRES_PASSWORD: cal
+      POSTGRES_DB: cal
+    ports:
+      - "5432:5432"
+
+  calcom:
+    image: calcom/cal.com
+    restart: always
+    depends_on:
+      - db
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgresql://cal:cal@db:5432/cal
+      NEXT_PUBLIC_WEBAPP_URL: http://localhost:3000
+      NEXTAUTH_URL: http://localhost:3000
+      CALENDSO_ENCRYPTION_KEY: replace-with-a-long-random-string-at-least-32-chars
