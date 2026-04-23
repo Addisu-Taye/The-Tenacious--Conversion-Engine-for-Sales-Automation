@@ -1,59 +1,57 @@
 # The Tenacious Conversion Engine
 
-TRP1 Week 10 challenge project for Tenacious Consulting and Outsourcing.
+TRP1 Week 10 Challenge — Addisu Taye
 
 ## Overview
 
-This project is an AI-assisted lead generation and conversion system designed around the Tenacious challenge specification. The current build establishes the Day 0 and early interim infrastructure needed for:
+This project implements an AI-assisted multi-channel conversion system designed to:
 
-- outbound email delivery
-- inbound SMS/webhook handling
-- HubSpot CRM writes
-- Langfuse observability
-- public-signal scraping with Playwright
-- τ²-Bench evaluation setup
+- Identify and engage prospects
+- Conduct structured outreach
+- Qualify leads
+- Persist interactions in CRM
+- Enable booking via Cal.com
+- Provide observability and evaluation
+
+The system is built incrementally following the challenge phases, with Day 0 and interim infrastructure fully established.
+
+---
 
 ## Architecture
 
-```text
-Signals -> Agent -> Channels -> Webhooks -> CRM -> Observability -> Evaluation
-Components
-Email: Resend
-SMS: Africa's Talking sandbox
-CRM: HubSpot Developer Sandbox
-Observability: Langfuse
-Webhooks/API: FastAPI + ngrok
-Evaluation: τ²-Bench
-Signal pipeline: Playwright
-Current Status
-Verified Running
-Resend outbound email
-Africa's Talking inbound SMS webhook
-HubSpot contact creation/update
-Langfuse trace submission
-FastAPI webhook server via ngrok
-Playwright public-page fetch
-τ²-Bench retail smoke test setup
-Partial / Pending
-Cal.com local deployment
-full enrichment pipeline
-competitor gap pipeline
-full τ²-Bench baseline scoring
-p50/p95 latency across 20+ interactions
+```mermaid
+flowchart LR
+    A[External Signals<br/>Playwright] --> B[Enrichment Layer]
+    B --> C[Agent Layer]
+
+    C --> D[Email Channel<br/>Resend]
+    C --> E[SMS Channel<br/>Africa's Talking]
+
+    D --> F[FastAPI Webhooks]
+    E --> F
+
+    F --> G[HubSpot CRM]
+    F --> H[Langfuse Observability]
+
+    G --> C
+
+    C --> I[Cal.com Booking]
+
+    C --> J[τ²-Bench Evaluation]
+Production Stack
+Component	Status
+Resend (Email)	✅ Verified
+Africa’s Talking (SMS)	✅ Verified
+HubSpot Sandbox	✅ Verified
+Langfuse	✅ Verified
+Cal.com	✅ Verified (local + booking flow tested)
 Repository Structure
 agent/
   app.py
   email_handler.py
   hubspot_client.py
+  calcom_client.py
   observability/
-    langfuse_client.py
-
-scripts/
-  test_langfuse.py
-  test_hubspot.py
-  test_resend.py
-  test_email_flow.py
-  test_signal_fetch.py
 
 configs/
   enrichment_sample.json
@@ -62,20 +60,26 @@ configs/
   data_handling_ack.md
 
 eval/
-  tau2_smoke_output.txt
-  tau2-bench/
+  score_log.json
+  trace_log.jsonl
+
+scripts/
+  test_email_flow.py
+  test_signal_fetch.py
+
+baseline.md
+README.md
 Setup
-1. Create environment
+1. Environment
 python -m venv venv
 venv\Scripts\activate
-pip install -r requirements.txt
-2. Configure environment variables
+pip install -r agent/requirements.txt
+2. Environment Variables
 
-Create .env with:
+Create .env:
 
 LANGFUSE_PUBLIC_KEY=
 LANGFUSE_SECRET_KEY=
-LANGFUSE_BASE_URL=https://cloud.langfuse.com
 
 HUBSPOT_ACCESS_TOKEN=
 
@@ -84,79 +88,236 @@ FROM_EMAIL=
 
 AFRICASTALKING_USERNAME=sandbox
 AFRICASTALKING_API_KEY=
-AFRICASTALKING_SHORTCODE=
-3. Start the API server
+
+CALCOM_BASE_URL=http://localhost:3000
+3. Run API
 uvicorn agent.app:app --reload --port 8000
-4. Expose webhook locally
+4. Expose Webhook
 ngrok http 8000
-Smoke Tests
-Langfuse
-python -m scripts.test_langfuse
-HubSpot
-python -m scripts.test_hubspot
-Email
-python -m scripts.test_resend
-Traced email flow
+Testing
+Email Flow
 python -m scripts.test_email_flow
-Playwright signal fetch
+Signal Fetch
 python -m scripts.test_signal_fetch
+Cal.com Setup
+docker compose -f docker-compose.calcom.yml up -d
+
+Then:
+
+Create account
+Create event type
+Book test meeting
 τ²-Bench
-
-From eval/tau2-bench:
-
+cd eval/tau2-bench
 uv sync
 $env:PYTHONIOENCODING="utf-8"
 uv run tau2 run --domain retail --agent-llm gpt-4.1 --user-llm gpt-4.1 --num-trials 1 --num-tasks 3
-Interim Notes
-
-This repo currently demonstrates the infrastructure and prototype artifacts required for interim submission. Some challenge deliverables are represented as sample schemas or prototype outputs rather than full production implementations at this stage.
-
+Known Limitations (Interim)
+Enrichment pipeline partially implemented
+Competitor analysis is prototype
+τ²-Bench full baseline pending
+Latency metrics not yet at required scale
 Data Handling
-no real Tenacious customer data used
-all current prospect records are synthetic/test records
-Tenacious-branded outputs should be treated as draft artifacts
-
-### Why this helps
-This README makes the repo legible to graders in under 2 minutes.
+No real customer data used
+All prospects are synthetic
+Outputs treated as draft artifacts
 
 ---
 
-## 4) Latency estimate
+# 📄 INTERIM SUBMISSION REPORT (DETAILED)
 
-Since the rubric asks for **p50/p95 latency numbers from at least 20 real email and SMS interactions pulled from trace log**, the strict answer is:
+## TRP1 – The Tenacious Conversion Engine  
+**Student:** Addisu Taye  
 
-- if you do **not** have 20 interactions yet, you should **not claim final latency metrics**
-- but you can still add a **provisional latency note** and explain that the 20-interaction requirement is not yet fully satisfied
+---
 
-### Best honest path
-Create:
+## 1. Architecture Overview & Design Decisions
 
-```text
-configs/latency_estimate.md
+The system follows a modular architecture:
 
-Use this:
+### Layers
 
-# Latency Estimate (Interim)
+1. **Signal Layer**
+   - Playwright scraping for job signals
 
-## Status
-This is a provisional latency note, not the final required benchmark.
+2. **Enrichment Layer**
+   - Prototype structure for firmographics and signals
 
-The challenge asks for p50/p95 latency from at least 20 real email and SMS interactions pulled from the trace log. That interaction volume has not yet been reached in the current interim state.
+3. **Agent Layer**
+   - Central orchestration logic
 
-## Current Observation
-Based on the completed smoke tests and traced email flow, the system is already capturing per-interaction latency in Langfuse metadata.
+4. **Channel Layer**
+   - Email (Resend)
+   - SMS (Africa’s Talking)
 
-## Planned Method
-1. Execute at least 20 combined email and SMS interactions.
-2. Export or inspect the trace metadata.
-3. Extract `latency_ms` values.
-4. Compute:
-   - p50 latency
-   - p95 latency
+5. **Webhook Layer**
+   - FastAPI endpoints for inbound communication
 
-## Interim Placeholder
-- p50 latency: pending sufficient sample size
-- p95 latency: pending sufficient sample size
+6. **CRM Layer**
+   - HubSpot contact persistence
 
-## Note
-No final latency claim is made yet in order to avoid overstating current evidence.
+7. **Observability**
+   - Langfuse tracing
+
+8. **Booking**
+   - Cal.com integration
+
+9. **Evaluation**
+   - τ²-Bench
+
+---
+
+## Key Design Decisions
+
+- Email-first outreach model
+- Modular integrations for isolation and debugging
+- Observability-first instrumentation
+- Synthetic data compliance
+- Progressive system build (Day 0 → Act I → Act II)
+
+---
+
+## 2. Production Stack Status
+
+| Component | Status |
+|----------|--------|
+| Resend | ✅ Working |
+| Africa’s Talking | ✅ Working |
+| HubSpot Sandbox | ✅ Working |
+| Langfuse | ✅ Working |
+| Cal.com | ✅ Working (Docker + booking verified) |
+
+Evidence:
+- Email sent successfully
+- SMS webhook received
+- HubSpot contact created
+- Langfuse trace logged
+- Cal.com booking completed
+
+---
+
+## 3. Enrichment Pipeline Status
+
+| Component | Status |
+|----------|--------|
+| Job signal scraping | ✅ Partial (Playwright) |
+| Firmographics | ⚠️ Prototype |
+| layoffs.fyi | ❌ Not implemented |
+| Leadership change | ❌ Not implemented |
+| AI maturity score | ⚠️ Prototype |
+
+Output artifact:
+- `configs/enrichment_sample.json`
+
+---
+
+## 4. Competitor Gap Brief
+
+Status: **Prototype implemented**
+
+Output:
+- `configs/competitor_gap_brief.json`
+
+Includes:
+- competitor identification
+- gap hypotheses
+- positioning strategy
+
+---
+
+## 5. τ²-Bench Baseline
+
+### Methodology
+
+- Domain: retail
+- Tasks: 3
+- Trials: 1
+- Model: gpt-4.1
+
+### Status
+
+- Smoke test completed
+- Full baseline pending
+
+### Score
+
+- Not computed yet (insufficient trials)
+
+---
+
+## 6. Latency Metrics
+
+### Status
+
+Not yet meeting requirement (20+ interactions)
+
+### Current state
+
+- Langfuse captures latency per interaction
+- Aggregation not yet performed
+
+### Plan
+
+- Execute ≥20 interactions
+- Extract metrics from trace logs
+- compute p50 / p95
+
+---
+
+## 7. What Is Working
+
+- Email delivery (Resend)
+- SMS webhook (Africa’s Talking)
+- FastAPI server
+- ngrok routing
+- HubSpot CRM integration
+- Langfuse tracing
+- Playwright signal extraction
+- Cal.com booking flow
+- τ²-Bench execution
+
+---
+
+## 8. What Is Not Working / Pending
+
+- Full enrichment pipeline
+- layoffs integration
+- leadership detection
+- AI maturity scoring (robust)
+- τ²-Bench full evaluation
+- latency aggregation
+
+---
+
+## 9. Plan for Remaining Days
+
+### Act I
+- Run full τ² baseline
+- compute metrics
+
+### Act II
+- implement enrichment pipeline
+- build scoring system
+- integrate Cal.com deeply
+
+### Act III
+- optimize latency
+- multi-channel orchestration
+
+---
+
+## 10. Conclusion
+
+The system successfully establishes:
+
+- complete production stack
+- verified communication channels
+- CRM persistence
+- observability
+- booking integration
+
+The project is ready to transition into:
+- evaluation optimization
+- enrichment and conversion logic
+
+---
