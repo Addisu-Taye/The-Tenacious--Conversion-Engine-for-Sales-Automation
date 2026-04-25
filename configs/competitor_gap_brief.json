@@ -1,33 +1,10 @@
 {
-  "company_name": "TestCo",
-  "generated_at": "2026-04-22T18:58:00Z",
-  "sector": "B2B SaaS",
-  "company_stage": "Series B",
-  "prospect_ai_maturity_score": 2,
-  "peer_group": {
-    "selection_basis": "Top-quartile comparators by sector/stage (prototype logic)",
-    "competitors": [
-      "CompetitorA",
-      "CompetitorB",
-      "CompetitorC"
-    ]
-  },
-  "top_quartile_practices": [
-    "Published AI / automation messaging in product positioning",
-    "Visible technical hiring aligned with AI or data platform work",
-    "Clear operational maturity in engineering team structure"
+  "company": "Tenacious",
+  "competitors": ["CompA", "CompB"],
+  "gaps": [
+    "No automated pipeline",
+    "Manual deployment",
+    "Limited backend scalability"
   ],
-  "observed_gap_hypotheses": [
-    "Prospect does not yet present a clearly differentiated AI-forward delivery narrative",
-    "Public hiring and capability signals appear weaker than top-quartile peers",
-    "Team scaling signals are present, but operating model maturity is not clearly communicated"
-  ],
-  "recommended_positioning": {
-    "primary_angle": "AI-enabled conversion operations and workflow automation",
-    "secondary_angle": "Execution support through modular, traceable automation systems"
-  },
-  "confidence_notes": [
-    "This brief is an interim prototype artifact.",
-    "Full competitor retrieval and ranking pipeline is not yet implemented."
-  ]
+  "recommendation": "Introduce managed engineering squad to accelerate backend and automation workflows"
 }
