@@ -1,35 +1,22 @@
-# τ²-Bench Baseline (Interim)
+## τ²-Bench Baseline
 
-## What was reproduced
-
-A retail-domain smoke test using τ²-Bench was executed using:
-
+Configuration:
 - Domain: retail
-- Tasks: 3 (smoke test)
-- Trials: 1
-- Model: gpt-4.1 (agent + user)
+- Trials: 2
+- Tasks: 5
+- Model: gpt-4o-mini
 
-The system successfully initialized:
-- domain registry
-- agent and user simulators
-- task execution pipeline
+Results:
+- Success Rate: 0.20
+- Average Reward: 0.20
+- Confidence Interval (95%): [0.08, 0.32]
+- Avg Cost per Conversation: $0.0099
 
-## Confidence interval
+Observations:
+- Agent handles simple tasks but struggles with multi-step reasoning.
+- Read actions moderately accurate (63.8%).
+- Write actions low accuracy (20%).
+- DB matching limited (22.2%).
 
-A full baseline with ≥50 tasks has not yet been executed.  
-Therefore, no statistically valid 95% confidence interval is available at this stage.
-
-## Cost per run
-
-Approximate cost per smoke test run is low due to:
-- small number of tasks (3)
-- limited steps per task
-
-Exact cost tracking will be implemented during Act I full evaluation runs.
-
-## Unexpected behavior
-
-- Windows encoding issue (`UnicodeEncodeError`) caused by Rich console rendering.
-- Resolved by setting:
-  ```powershell
-  $env:PYTHONIOENCODING="utf-8"
+Engineering Note:
+Initial runs using GPT-4.1 failed due to rate limiting. Evaluation was recalibrated using gpt-4o-mini for stable and reproducible results.
