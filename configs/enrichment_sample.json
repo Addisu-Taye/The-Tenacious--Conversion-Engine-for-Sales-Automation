@@ -1,52 +1,13 @@
 {
-  "company_name": "TestCo",
-  "source": "synthetic_test_prospect",
-  "generated_at": "2026-04-22T18:55:00Z",
+  "company": "Tenacious",
   "firmographics": {
-    "company_domain": "testco.example",
-    "industry": "B2B SaaS",
-    "employee_count_estimate": 120,
-    "location": "Remote / US",
-    "funding_stage": "Series B",
-    "last_funding_event": {
-      "type": "Series B",
-      "date": "2026-02-10",
-      "amount_usd": 15000000,
-      "source": "Crunchbase ODM sample (planned integration)"
-    }
+    "size": "200-500",
+    "industry": "SaaS"
   },
   "signals": {
-    "job_post_velocity": {
-      "status": "partial",
-      "value": "Public hiring page detected",
-      "confidence": 0.62,
-      "source": "Playwright public page scrape"
-    },
-    "layoffs_signal": {
-      "status": "not_implemented",
-      "value": null,
-      "confidence": 0.0,
-      "source": "layoffs.fyi integration pending"
-    },
-    "leadership_change": {
-      "status": "not_implemented",
-      "value": null,
-      "confidence": 0.0,
-      "source": "Press / Crunchbase leadership check pending"
-    }
+    "job_postings": 12,
+    "layoffs_recent": false,
+    "leadership_change": true
   },
-  "ai_maturity": {
-    "score": 2,
-    "confidence": 0.45,
-    "status": "prototype",
-    "justification": [
-      "Public technical hiring page exists",
-      "Company messaging references automation",
-      "No verified AI leadership signal yet"
-    ]
-  },
-  "notes": [
-    "This is a sample interim artifact demonstrating the target output schema.",
-    "Only the public-page scraping step is currently implemented end-to-end."
-  ]
+  "ai_maturity_score": 2
 }
